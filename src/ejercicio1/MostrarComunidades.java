@@ -24,12 +24,11 @@ public class MostrarComunidades extends javax.swing.JFrame {
     static String password = "root";
     static String url = "jdbc:mysql://localhost:3306/" + bd;
     static Connection conn;
-    private Integer id=0;
-    private String nombre="";
+    private Integer id = 0;
+    private String nombre = "";
     private ResultSet rs;
     private PreparedStatement ps;
     private String consultaComunidades;
-    
 
     /**
      * Creates new form MostrarComunidades
@@ -37,26 +36,26 @@ public class MostrarComunidades extends javax.swing.JFrame {
     public MostrarComunidades() {
         initComponents();
         establecerConexion();
-              
-        try { 
-            consultaComunidades="select * from comunidad ";  
-            ps= conn.prepareStatement(consultaComunidades);
-            rs= ps.executeQuery();
+
+        try {
+            consultaComunidades = "select * from comunidad ";
+            ps = conn.prepareStatement(consultaComunidades);
+            rs = ps.executeQuery();
             rs.next();
-            id= rs.getInt("id");
-            nombre= rs.getString("nombre");
+            id = rs.getInt("id");
+            nombre = rs.getString("nombre");
             this.textId.setText(id.toString());
             this.textNombre.setText(nombre);
-            
+
         } catch (SQLException ex) {
-            
+
         }
 
     }
 
     public void establecerConexion() {
         try {
-            conn = DriverManager.getConnection(url, login, password);            
+            conn = DriverManager.getConnection(url, login, password);
             if (conn != null) {
                 this.lConexion.setText("Conexion Establecia");
             }
@@ -109,6 +108,11 @@ public class MostrarComunidades extends javax.swing.JFrame {
 
         bAtras.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         bAtras.setText("< <");
+        bAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bAtrasActionPerformed(evt);
+            }
+        });
 
         bAlante.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         bAlante.setText("> >");
@@ -120,6 +124,11 @@ public class MostrarComunidades extends javax.swing.JFrame {
 
         bFinal.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         bFinal.setText(" | >");
+        bFinal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bFinalActionPerformed(evt);
+            }
+        });
 
         lConexion.setText("...");
 
@@ -177,6 +186,43 @@ public class MostrarComunidades extends javax.swing.JFrame {
     private void bPrincipioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrincipioActionPerformed
         try {
             rs.first();
+            id = rs.getInt("id");
+            nombre = rs.getString("nombre");
+            this.textId.setText(id.toString());
+            this.textNombre.setText(nombre);
+        } catch (SQLException ex) {
+
+        }
+    }//GEN-LAST:event_bPrincipioActionPerformed
+
+    private void bAlanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAlanteActionPerformed
+        try {
+            conn.prepareStatement(consultaComunidades, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs.next();
+            id = rs.getInt("id");
+            nombre = rs.getString("nombre");
+            this.textId.setText(id.toString());
+            this.textNombre.setText(nombre);
+        } catch (SQLException ex) {
+
+        }
+    }//GEN-LAST:event_bAlanteActionPerformed
+
+    private void bAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAtrasActionPerformed
+        try {
+            conn.prepareStatement(consultaComunidades, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs.previous();
+            id = rs.getInt("id");
+            nombre = rs.getString("nombre");
+            this.textId.setText(id.toString());
+            this.textNombre.setText(nombre);
+        } catch (SQLException ex) {  
+         }    }//GEN-LAST:event_bAtrasActionPerformed
+
+    private void bFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFinalActionPerformed
+         try {
+            conn.prepareStatement(consultaComunidades,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY );
+            rs.last();          
             id=rs.getInt("id");
             nombre=rs.getString("nombre");
             this.textId.setText(id.toString());
@@ -184,16 +230,7 @@ public class MostrarComunidades extends javax.swing.JFrame {
         } catch (SQLException ex) {
             
         }
-    }//GEN-LAST:event_bPrincipioActionPerformed
-
-    private void bAlanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAlanteActionPerformed
-        try {
-            conn.prepareStatement(consultaComunidades,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY );
-            
-        } catch (SQLException ex) {
-            
-        }
-    }//GEN-LAST:event_bAlanteActionPerformed
+    }//GEN-LAST:event_bFinalActionPerformed
 
     /**
      * @param args the command line arguments
