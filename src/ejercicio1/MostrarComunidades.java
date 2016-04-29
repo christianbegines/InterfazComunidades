@@ -19,17 +19,6 @@ import java.util.logging.Logger;
  */
 public class MostrarComunidades extends javax.swing.JFrame {
 
-    static String bd = "parques";
-    static String login = "root";
-    static String password = "root";
-    static String url = "jdbc:mysql://localhost:3306/" + bd;
-    static Connection conn;
-    private Integer id = 0;
-    private String nombre = "";
-    private ResultSet rs;
-    private PreparedStatement ps;
-    private String consultaComunidades;
-
     /**
      * Creates new form MostrarComunidades
      */
@@ -37,20 +26,17 @@ public class MostrarComunidades extends javax.swing.JFrame {
         initComponents();
         establecerConexion();
 
+    }
+
+    public void obtenerDatos() {
         try {
-            consultaComunidades = "select * from comunidad ";
-            ps = conn.prepareStatement(consultaComunidades);
-            rs = ps.executeQuery();
-            rs.next();
             id = rs.getInt("id");
             nombre = rs.getString("nombre");
             this.textId.setText(id.toString());
             this.textNombre.setText(nombre);
-
         } catch (SQLException ex) {
 
         }
-
     }
 
     public void establecerConexion() {
@@ -58,6 +44,12 @@ public class MostrarComunidades extends javax.swing.JFrame {
             conn = DriverManager.getConnection(url, login, password);
             if (conn != null) {
                 this.lConexion.setText("Conexion Establecia");
+                consultaComunidades = "select * from comunidad ";
+                ps = conn.prepareStatement(consultaComunidades, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                rs = ps.executeQuery();
+                rs.next();
+                obtenerDatos();
+
             }
         } catch (SQLException ex) {
             System.out.println("Hubo un problema al intentar conectarse con la base de datos " + url);
@@ -87,6 +79,7 @@ public class MostrarComunidades extends javax.swing.JFrame {
         lConexion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Ficha Comunidades");
 
         labelId.setText("Id");
 
@@ -186,10 +179,7 @@ public class MostrarComunidades extends javax.swing.JFrame {
     private void bPrincipioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrincipioActionPerformed
         try {
             rs.first();
-            id = rs.getInt("id");
-            nombre = rs.getString("nombre");
-            this.textId.setText(id.toString());
-            this.textNombre.setText(nombre);
+            obtenerDatos();
         } catch (SQLException ex) {
 
         }
@@ -197,12 +187,13 @@ public class MostrarComunidades extends javax.swing.JFrame {
 
     private void bAlanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAlanteActionPerformed
         try {
-            conn.prepareStatement(consultaComunidades, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs.next();
-            id = rs.getInt("id");
-            nombre = rs.getString("nombre");
-            this.textId.setText(id.toString());
-            this.textNombre.setText(nombre);
+            if (rs.isLast() == false) {
+                rs.next();
+            } else {
+                rs.first();
+            }
+
+            obtenerDatos();
         } catch (SQLException ex) {
 
         }
@@ -210,25 +201,23 @@ public class MostrarComunidades extends javax.swing.JFrame {
 
     private void bAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAtrasActionPerformed
         try {
-            conn.prepareStatement(consultaComunidades, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs.previous();
-            id = rs.getInt("id");
-            nombre = rs.getString("nombre");
-            this.textId.setText(id.toString());
-            this.textNombre.setText(nombre);
-        } catch (SQLException ex) {  
-         }    }//GEN-LAST:event_bAtrasActionPerformed
+            if (rs.isFirst() == false) {
+                rs.previous();
+            } else {
+                rs.last();
+            }
+
+            obtenerDatos();
+        } catch (SQLException ex) {
+        }
+    }//GEN-LAST:event_bAtrasActionPerformed
 
     private void bFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFinalActionPerformed
-         try {
-            conn.prepareStatement(consultaComunidades,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY );
-            rs.last();          
-            id=rs.getInt("id");
-            nombre=rs.getString("nombre");
-            this.textId.setText(id.toString());
-            this.textNombre.setText(nombre);
+        try {
+            rs.last();
+            obtenerDatos();
         } catch (SQLException ex) {
-            
+
         }
     }//GEN-LAST:event_bFinalActionPerformed
 
@@ -280,4 +269,14 @@ public class MostrarComunidades extends javax.swing.JFrame {
     private javax.swing.JTextField textId;
     private javax.swing.JTextField textNombre;
     // End of variables declaration//GEN-END:variables
+    private static String bd = "parques";
+    private static String login = "root";
+    private static String password = "root";
+    private static String url = "jdbc:mysql://localhost:3306/" + bd;
+    private static Connection conn;
+    private Integer id = 0;
+    private String nombre = "";
+    private ResultSet rs;
+    private PreparedStatement ps;
+    private String consultaComunidades;
 }
