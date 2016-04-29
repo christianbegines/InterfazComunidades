@@ -210,11 +210,26 @@ public class AppComunidades extends javax.swing.JFrame {
     }//GEN-LAST:event_bNuevoActionPerformed
 
     private void bEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditarActionPerformed
-        // TODO add your handling code here:
+        try {
+            ps=conn.prepareStatement(this.updateParque);
+            ps.setString(1,this.textNombre.getText());
+            ps.setDouble(2,Double.parseDouble(this.textExtension.getText()));
+            ps.setInt(3,Integer.parseInt(this.textCodigo.getText()));
+            ps.setInt(4,Integer.parseInt(this.textId.getText()));
+            int hecho=ps.executeUpdate();
+            if(hecho!=0){
+                JOptionPane.showMessageDialog(null,"Edicion correcta","Ventana check",JOptionPane.INFORMATION_MESSAGE);
+            }else{
+            JOptionPane.showMessageDialog(null,"Edicion incorrecta","Ventana check",JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Error" + ex.getMessage() +ex.getErrorCode(),"Ventana check",JOptionPane.INFORMATION_MESSAGE);
+ 
+        }
     }//GEN-LAST:event_bEditarActionPerformed
 
     private void bBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBorrarActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_bBorrarActionPerformed
 
     /**
