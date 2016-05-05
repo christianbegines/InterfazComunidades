@@ -1,7 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * 
  */
 package ejerecicio2;
 
@@ -28,7 +27,9 @@ public class AppComunidades extends javax.swing.JFrame {
         initComponents();
         establecerConexion();
     }
-
+    /**
+     * 
+     */
     public void establecerConexion() {
         try {
             conn = DriverManager.getConnection(url, login, password);
@@ -42,7 +43,10 @@ public class AppComunidades extends javax.swing.JFrame {
             System.out.println(e);
         }
     }
-
+    /**
+     * 
+     * @return 
+     */
     public int buscarId() {
         PreparedStatement psSelectNombre;
         int id = 0;
@@ -239,11 +243,23 @@ public class AppComunidades extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "!!Error" + ex.getMessage() + ex.getErrorCode(), "Ventana check", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_bNuevoActionPerformed
-
+    
+   
+  
     private void bEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditarActionPerformed
         PreparedStatement psUpdate = null;
         String updateParque ;
         try {
+            if (!this.textNombre.getText().isEmpty() && comunidadModif != 0 && !this.textExtension.getText().isEmpty()) {
+                updateParque = "update parque set  nombre = ?, extension = ?, idComunidad= ? where id = ?";
+                psUpdate = conn.prepareStatement(updateParque);
+                psUpdate.setString(1, this.textNombre.getText()); 
+                psUpdate.setDouble(2, Double.parseDouble(this.textExtension.getText()));
+                
+                psUpdate.setInt(3, buscarId());
+                psUpdate.setInt(4, Integer.parseInt(this.textId.getText()));
+
+            }
             if (!this.textNombre.getText().isEmpty() && comunidadModif != 0) {
                 updateParque = "update parque set  nombre = ?, idComunidad= ? where id = ?";
                 psUpdate = conn.prepareStatement(updateParque);
